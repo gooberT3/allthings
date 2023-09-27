@@ -1,55 +1,90 @@
+
 #include <iostream>
 
-int search(int, int [], const int);
-void bubbleSort(int [], const int);
+int linearSearch(const int, int [], int);
+int binarySearch(const int, int[], int);
+void bubbleSort(const int, int []);
 
 int main() {
-      int userNum = 10;
-
-      std::cout << "Enter an integer between 0 - 150 to search for: ";
-      std::cout << std::endl;
-
-      int array_1d[] = {101, 125, 32, 73, 7, 10, 54, 68, 150, 43,
+      const int SIZE = 30;
+      int array_1d[] = {101, 125, 32, 73, 7, 10, 54, 69, 150, 43,
                         111, 25, 107, 19, 27, 133, 13, 88, 97, 5,
                         65, 2, 117, 30, 61, 99, 109, 146, 77, 81};
+      int key = 0;
+      std::cout << "Enter your key value to search for: ";
+      std::cin >> key;
+      std::cout << std::endl;
 
-      const int SIZE = sizeof(array_1d);
+      int linearCount = linearSearch(SIZE, array_1d, key);
 
-      int linearComparisonCount = search(userNum, array_1d, SIZE);
+      bubbleSort(SIZE, array_1d);
 
-      std::cout << "The amount of comparisons used during linear search was: " << linearComparisonCount << "\n\n";
+      int binaryCount = binarySearch(SIZE, array_1d, key); 
 
-      bubbleSort(array_1d, SIZE);
-
-      for(int i = 0; i < SIZE; i++ ) {
-            std::cout << array_1d[i] << " ";
-      }
+      std::cout << "The number of comparisons performed using the linear search method was: " << linearCount << "\n\n";
+      std::cout << "The number of comparisons performed using the binary search method was: " << binaryCount << "\n\n";
 
       return 0;
 }
 
-int search(int userNum, int array_1d[], const int SIZE) {
+int linearSearch(const int SIZE, int array_1d[], int key) {
       int comparisonCount = 0;
 
-      for(; comparisonCount < SIZE; comparisonCount++) {
-            if(array_1d[comparisonCount] == userNum) {
-                  std::cout << "Value '" << userNum << "' located at index [" << comparisonCount << "]\n\n";
+      for(int index = 0; index < SIZE; index++) {
+            comparisonCount++;
+            if(array_1d[index] == key) {
+                  std::cout << "Key value found at index [" << index << "]\n\n";
+                  break;
+            }
+            if(comparisonCount == 30) {
+                  std::cout << "Key value not within list.\n\n";
                   break;
             }
       }
 
-      return comparisonCount + 1;
+      return comparisonCount;
 }
 
-void bubbleSort(int array_1d[], const int SIZE) {
+int binarySearch(const int SIZE, int array_1d[], int key) {
+     int binaryCount = 0,
+         right = SIZE - 1,
+         left = 0;
+
+     while(left <= right) {
+           binaryCount++;
+           int middle = left + (right - left) / 2;
+
+           if(array_1d[middle] == key) {
+                 break;
+           }else if(array_1d[middle] < key) {
+                 left = middle + 1;
+           }else {
+                 right = middle - 1;
+           }
+
+           if(binaryCount == 30) {
+                 std::cout << "Key value not within list.\n\n";
+                 break;
+           }
+     }
+
+     return binaryCount;
+}
+
+void bubbleSort(const int SIZE, int array_1d[]) {
       for(int i = 0; i < SIZE - 1; i++) {
-            for(int j = 0; j < SIZE - 1; j++) {
-                  if(array_1d[j] > array_1d[j + 1]) {
+            bool swapped = false;
+            for(int j  = 0; j < SIZE - i - 1; j++) {
+                  if(array_1d[j + 1] < array_1d[j]) {
                         int temp = 0;
                         temp = array_1d[j];
                         array_1d[j] = array_1d[j + 1];
                         array_1d[j + 1] = temp;
+                        swapped = true;
                   }
+            }
+            if(swapped == false) {
+                  break;
             }
       }
 }
